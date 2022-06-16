@@ -15,7 +15,7 @@ public class UnityPixelEditor : MonoBehaviour
 	int[] _indexData = null;
 	Color32[] _paletteData = null;
 	Color32[] _pixels = null;
-	int _paletteIndex = 0;
+	int _paletteIndex = 1;
 
 	bool _down = false;
 	Graphic _graphic = null;
