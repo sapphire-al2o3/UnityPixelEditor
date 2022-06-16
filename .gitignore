@@ -6,6 +6,7 @@
 /Assets/AssetStoreTools*
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+/Recordings/
 
 # Visual Studio 2015 cache directory
 /.vs/
