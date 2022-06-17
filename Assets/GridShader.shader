@@ -5,6 +5,8 @@ Shader "Unlit/GridShader"
         _MainTex ("Texture", 2D) = "white" {}
 		_GridColor ("Grid Color", Color) = (0, 0, 0, 1)
 		_GridColorL ("Grid Color L", Color) = (0, 0, 0, 1)
+		_Grid ("Grid", int) = 16
+		_GridL ("Grid L", int) = 2
     }
     SubShader
     {
@@ -36,6 +38,8 @@ Shader "Unlit/GridShader"
 			float4 _MainTex_TexelSize;
 			fixed4 _GridColor;
 			fixed4 _GridColorL;
+			float _Grid;
+			float _GridL;
 
             v2f vert (appdata v)
             {
@@ -50,10 +54,10 @@ Shader "Unlit/GridShader"
 				float2 s = floor(1.001 - i.uv);
 				float ss = 1 - min(s.x + s.y, 1);
 
-				float2 p = floor(1.05 - frac(i.uv * 16));
+				float2 p = floor(1.05 - frac(i.uv * _Grid));
 				float g = min(p.x + p.y, 1);
 
-				float2 p2 = floor(1.01 - frac(i.uv * 2));
+				float2 p2 = floor(1.01 - frac(i.uv * _GridL));
 				float g2 = min(p2.x + p2.y, 1);
 
                 // sample the texture
