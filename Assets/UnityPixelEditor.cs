@@ -17,9 +17,14 @@ public class UnityPixelEditor : MonoBehaviour
 	Color32[] _pixels = null;
 	int _paletteIndex = 1;
 
+	Texture2D _workTex;
+	int[] _workIndexData = null;
+	Color32[] _workPixels = null;
+
 	bool _down = false;
 	Graphic _graphic = null;
 	Vector2Int _point;
+	Vector2Int _beginPoint;
 	
 	public enum Tool
 	{
@@ -42,9 +47,16 @@ public class UnityPixelEditor : MonoBehaviour
 		_tex.wrapMode = TextureWrapMode.Clamp;
 		_tex.filterMode = FilterMode.Point;
 
-		_indexData = new int[width * height];
+		int length = width * height;
+		_indexData = new int[length];
 		_paletteData = new Color32[8];
-		_pixels = new Color32[_indexData.Length];
+		_pixels = new Color32[length];
+
+		_workTex = new Texture2D(width, height);
+		_workTex.wrapMode = TextureWrapMode.Clamp;
+		_workTex.filterMode = FilterMode.Point;
+		_workIndexData = new int[length];
+		_workPixels = new Color32[length];
 
 		_paletteData[0] = new Color32(255, 255, 255, 255);
 		_paletteData[1] = new Color32(0, 0, 0, 255);
@@ -56,10 +68,14 @@ public class UnityPixelEditor : MonoBehaviour
 			_pixels[i] = _paletteData[0];
 		}
 
-		UpdateTexture();
+		UpdateTexture(_tex, _pixels);
+
+		ClearWork();
+		UpdateTexture(_workTex, _workPixels);
 
 		_graphic = GetComponent<Graphic>();
 		GetComponent<RawImage>().texture = _tex;
+		GetComponent<RawImage>().material.SetTexture("_WorkTex", _workTex);
 	}
 
 	private void OnDestroy()
@@ -134,7 +150,22 @@ public class UnityPixelEditor : MonoBehaviour
 		}
 	}
 
-	void FillRect(int x0, int y0, int x1, int y1, int index)
+	void ClearWork()
+	{
+		for (int i = 0; i < _workIndexData.Length; i++)
+		{
+			_workIndexData[i] = 0;
+		}
+		for (int i = 0; i < _workPixels.Length; i++)
+		{
+			_workPixels[i].r = 0;
+			_workPixels[i].g = 0;
+			_workPixels[i].b = 0;
+			_workPixels[i].a = 0;
+		}
+	}
+
+	void FillRect(int[] indexData, Color32[] pixels, Color32[] paletteData, int x0, int y0, int x1, int y1, int index)
 	{
 		int left = Mathf.Min(x0, x1);
 		int right = Mathf.Max(x0, x1);
@@ -151,8 +182,8 @@ public class UnityPixelEditor : MonoBehaviour
 			int y = i * width;
 			for (int j = left; j <= right; j++)
 			{
-				_indexData[y + j] = index;
-				_pixels[y + j] = _paletteData[index];
+				indexData[y + j] = index;
+				pixels[y + j] = paletteData[index];
 			}
 		}
 	}
@@ -185,10 +216,10 @@ public class UnityPixelEditor : MonoBehaviour
 		PaintImpl(indexData, pixels, paletteData, x, y, index, c);
 	}
 
-	void UpdateTexture()
+	void UpdateTexture(Texture2D tex, Color32[] pixels)
 	{
-		_tex.SetPixels32(_pixels);
-		_tex.Apply();
+		tex.SetPixels32(pixels);
+		tex.Apply();
 	}
 
 	bool GetPoint(out Vector2Int result)
@@ -236,15 +267,21 @@ public class UnityPixelEditor : MonoBehaviour
                 if (_tool == Tool.Pen)
                 {
                     DrawDot(_indexData, _pixels, _paletteData, point.x, point.y, _paletteIndex);
-                    UpdateTexture();
+                    UpdateTexture(_tex, _pixels);
                     _point = point;
                     _down = true;
                 }
                 else if (_tool == Tool.Paint)
                 {
                     Paint(_indexData, _pixels, _paletteData, point.x, point.y, _paletteIndex);
-                    UpdateTexture();
+                    UpdateTexture(_tex, _pixels);
                 }
+				else if (_tool == Tool.FillRect)
+				{
+					_point = point;
+					_beginPoint = point;
+					_down = true;
+				}
             }
         }
         else if (Input.GetMouseButton(0))
@@ -257,14 +294,30 @@ public class UnityPixelEditor : MonoBehaviour
                     {
                         DrawLine(_indexData, _pixels, _paletteData, _point.x, _point.y, point.x, point.y, _paletteIndex);
                         //DrawDot(point.x, point.y, 1);
-                        UpdateTexture();
+                        UpdateTexture(_tex, _pixels);
                     }
+					else if (_tool == Tool.FillRect)
+					{
+						ClearWork();
+						FillRect(_workIndexData, _workPixels, _paletteData, _beginPoint.x, _beginPoint.y, point.x, point.y, _paletteIndex);
+						_point = point;
+						UpdateTexture(_workTex, _workPixels);
+					}
                 }
                 _point = point;
             }
         }
         else if (Input.GetMouseButtonUp(0))
         {
+			if (_down)
+			{
+				if (_tool == Tool.FillRect)
+				{
+					ClearWork();
+					FillRect(_indexData, _pixels, _paletteData, _beginPoint.x, _beginPoint.y, _point.x, _point.y, _paletteIndex);
+					UpdateTexture(_tex, _pixels);
+				}
+			}
             _down = false;
         }
     }
