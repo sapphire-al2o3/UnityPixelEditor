@@ -73,13 +73,13 @@ public class UnityPixelEditor : MonoBehaviour
         
     }
 
-	void DrawDot(int x, int y, int index)
+	void DrawDot(int[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, int index)
 	{
-		_indexData[y * width + x] = index;
-		_pixels[y * width + x] = _paletteData[index];
+		indexData[y * width + x] = index;
+		pixels[y * width + x] = paletteData[index];
 	}
 
-	void DrawLine(int x0, int y0, int x1, int y1, int index)
+	void DrawLine(int[] indexData, Color32[] pixels, Color32[] paletteData, int x0, int y0, int x1, int y1, int index)
 	{
 		int dx = Mathf.Abs(x1 - x0);
 		int dy = Mathf.Abs(y1 - y0);
@@ -99,9 +99,9 @@ public class UnityPixelEditor : MonoBehaviour
 				{
 					break;
 				}
-
-				_indexData[y * width + x] = index;
-				_pixels[y * width + x] = _paletteData[index];
+				int k = y * width + x;
+				indexData[k] = index;
+				pixels[k] = paletteData[index];
 				x += sx;
 				e += dy2;
 				if (e >= 0)
@@ -120,8 +120,9 @@ public class UnityPixelEditor : MonoBehaviour
 				{
 					break;
 				}
-				_indexData[y * width + x] = index;
-				_pixels[y * width + x] = _paletteData[index];
+				int k = y * width + x;
+				indexData[k] = index;
+				pixels[k] = paletteData[index];
 				y += sy;
 				e += dx2;
 				if (e >= 0)
@@ -156,32 +157,32 @@ public class UnityPixelEditor : MonoBehaviour
 		}
 	}
 
-	void PaintImpl(int x, int y, int index, int c)
+	void PaintImpl(int[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, int index, int c)
 	{
 		if (x >= width || x < 0) return;
 		if (y >= height || y < 0) return;
 		int k = y * width + x;
-		if (_indexData[k] == c)
+		if (indexData[k] == c)
 		{
-			_indexData[k] = index;
-			_pixels[k] = _paletteData[index];
-			PaintImpl(x - 1, y, index, c);
-			PaintImpl(x + 1, y, index, c);
-			PaintImpl(x, y - 1, index, c);
-			PaintImpl(x, y + 1, index, c);
+			indexData[k] = index;
+			pixels[k] = paletteData[index];
+			PaintImpl(indexData, pixels, paletteData, x - 1, y, index, c);
+			PaintImpl(indexData, pixels, paletteData, x + 1, y, index, c);
+			PaintImpl(indexData, pixels, paletteData, x, y - 1, index, c);
+			PaintImpl(indexData, pixels, paletteData, x, y + 1, index, c);
 		}
 	}
 
-	void Paint(int x, int y, int index)
+	void Paint(int[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, int index)
 	{
-		int c = _indexData[y * width + x];
+		int c = indexData[y * width + x];
 
 		if (c == index)
 		{
 			return;
 		}
 
-		PaintImpl(x, y, index, c);
+		PaintImpl(indexData, pixels, paletteData, x, y, index, c);
 	}
 
 	void UpdateTexture()
@@ -234,14 +235,14 @@ public class UnityPixelEditor : MonoBehaviour
             {
                 if (_tool == Tool.Pen)
                 {
-                    DrawDot(point.x, point.y, _paletteIndex);
+                    DrawDot(_indexData, _pixels, _paletteData, point.x, point.y, _paletteIndex);
                     UpdateTexture();
                     _point = point;
                     _down = true;
                 }
                 else if (_tool == Tool.Paint)
                 {
-                    Paint(point.x, point.y, _paletteIndex);
+                    Paint(_indexData, _pixels, _paletteData, point.x, point.y, _paletteIndex);
                     UpdateTexture();
                 }
             }
@@ -254,7 +255,7 @@ public class UnityPixelEditor : MonoBehaviour
                 {
                     if (_tool == Tool.Pen)
                     {
-                        DrawLine(_point.x, _point.y, point.x, point.y, _paletteIndex);
+                        DrawLine(_indexData, _pixels, _paletteData, _point.x, _point.y, point.x, point.y, _paletteIndex);
                         //DrawDot(point.x, point.y, 1);
                         UpdateTexture();
                     }
