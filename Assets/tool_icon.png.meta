@@ -11,6 +11,9 @@ TextureImporter:
   - first:
       213: -1462644031298618702
     second: tool_icon_rect
+  - first:
+      213: -4412150502169425937
+    second: tool_icon_line
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -182,6 +185,27 @@ TextureImporter:
       bones: []
       spriteID: 2bab991c005a3bbe0800000000000000
       internalID: -1462644031298618702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tool_icon_line
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe741aeae74e4c2c0800000000000000
+      internalID: -4412150502169425937
       vertices: []
       indices: 
       edges: []
