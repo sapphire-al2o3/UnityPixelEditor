@@ -3,6 +3,7 @@ Shader "Unlit/GridShader"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+		_WorkTex ("Texture", 2D) = "white" {}
 		_GridColor ("Grid Color", Color) = (0, 0, 0, 1)
 		_GridColorL ("Grid Color L", Color) = (0, 0, 0, 1)
 		_Grid ("Grid", int) = 16
@@ -36,6 +37,7 @@ Shader "Unlit/GridShader"
             sampler2D _MainTex;
             float4 _MainTex_ST;
 			float4 _MainTex_TexelSize;
+			sampler2D _WorkTex;
 			fixed4 _GridColor;
 			fixed4 _GridColorL;
 			float _Grid;
@@ -51,19 +53,21 @@ Shader "Unlit/GridShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-				float2 s = floor(1.001 - i.uv);
-				float ss = 1 - min(s.x + s.y, 1);
-
 				float2 p = floor(1.05 - frac(i.uv * _Grid));
+				//float2 p = floor(1.05 - abs(frac(i.uv * (_Grid)) - 0.5) * 2);
 				float g = min(p.x + p.y, 1);
 
+				//float2 p2 = floor(1.005 - abs(frac(i.uv * (_GridL / 2)) - 0.5) * 2);
 				float2 p2 = floor(1.01 - frac(i.uv * _GridL));
 				float g2 = min(p2.x + p2.y, 1);
 
-                // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
+				fixed4 work = tex2D(_WorkTex, i.uv);
+				col = lerp(col, work, work.a);
+				//g = step(abs(frac(i.uv * 8) - 0.5) * 2, 0.5);
 				col = lerp(col, _GridColor, g);
-				col = lerp(col, _GridColorL, g2);
+				//col = lerp(col, _GridColorL, g2);
+				//col = fixed4(g, g, g, 1);
 				return col;
             }
             ENDCG
