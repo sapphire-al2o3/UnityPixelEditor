@@ -16,19 +16,22 @@ public class UnityPixelEditor : MonoBehaviour
 
 
 	Texture2D _tex;
-	int[] _indexData = null;
+	byte[] _indexData = null;
 	Color32[] _pixels = null;
 	int _paletteIndex = 1;
 
 	Texture2D _workTex;
-	int[] _workIndexData = null;
+	byte[] _workIndexData = null;
 	Color32[] _workPixels = null;
 
 	bool _down = false;
 	Graphic _graphic = null;
 	Vector2Int _point;
 	Vector2Int _beginPoint;
-	
+
+	List<byte[]> _undoStack;
+	List<byte[]> _redoStack;
+
 	public enum Tool
 	{
 		Pen,
@@ -56,16 +59,19 @@ public class UnityPixelEditor : MonoBehaviour
 		_tex.filterMode = FilterMode.Point;
 
 		int length = width * height;
-		_indexData = new int[length];
+		_indexData = new byte[length];
 		_pixels = new Color32[length];
 
 		_workTex = new Texture2D(width, height);
 		_workTex.wrapMode = TextureWrapMode.Clamp;
 		_workTex.filterMode = FilterMode.Point;
-		_workIndexData = new int[length];
+		_workIndexData = new byte[length];
 		_workPixels = new Color32[length];
 
-		if (_paletteData.Length == 0)
+		_undoStack = new List<byte[]>();
+		_redoStack = new List<byte[]>();
+
+		if (_paletteData == null || _paletteData.Length == 0)
 		{
 			_paletteData = new Color32[8];
 			_paletteData[0] = new Color32(255, 255, 255, 255);
@@ -95,18 +101,13 @@ public class UnityPixelEditor : MonoBehaviour
 		_tex = null;
 	}
 
-	void Start()
-    {
-        
-    }
-
-	void DrawDot(int[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, int index)
+	void DrawDot(byte[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, byte index)
 	{
 		indexData[y * width + x] = index;
 		pixels[y * width + x] = paletteData[index];
 	}
 
-	void DrawLine(int[] indexData, Color32[] pixels, Color32[] paletteData, int x0, int y0, int x1, int y1, int index)
+	void DrawLine(byte[] indexData, Color32[] pixels, Color32[] paletteData, int x0, int y0, int x1, int y1, byte index)
 	{
 		int dx = Mathf.Abs(x1 - x0);
 		int dy = Mathf.Abs(y1 - y0);
@@ -161,22 +162,7 @@ public class UnityPixelEditor : MonoBehaviour
 		}
 	}
 
-	void ClearWork()
-	{
-		for (int i = 0; i < _workIndexData.Length; i++)
-		{
-			_workIndexData[i] = 0;
-		}
-		for (int i = 0; i < _workPixels.Length; i++)
-		{
-			_workPixels[i].r = 0;
-			_workPixels[i].g = 0;
-			_workPixels[i].b = 0;
-			_workPixels[i].a = 0;
-		}
-	}
-
-	void FillRect(int[] indexData, Color32[] pixels, Color32[] paletteData, int x0, int y0, int x1, int y1, int index)
+	void FillRect(byte[] indexData, Color32[] pixels, Color32[] paletteData, int x0, int y0, int x1, int y1, byte index)
 	{
 		int left = Mathf.Min(x0, x1);
 		int right = Mathf.Max(x0, x1);
@@ -199,7 +185,7 @@ public class UnityPixelEditor : MonoBehaviour
 		}
 	}
 
-	void PaintImpl(int[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, int index, int c)
+	void PaintImpl(byte[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, byte index, int c)
 	{
 		if (x >= width || x < 0) return;
 		if (y >= height || y < 0) return;
@@ -215,7 +201,7 @@ public class UnityPixelEditor : MonoBehaviour
 		}
 	}
 
-	void Paint(int[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, int index)
+	void Paint(byte[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, byte index)
 	{
 		int c = indexData[y * width + x];
 
@@ -225,6 +211,28 @@ public class UnityPixelEditor : MonoBehaviour
 		}
 
 		PaintImpl(indexData, pixels, paletteData, x, y, index, c);
+	}
+
+	void ClearWork()
+	{
+		for (int i = 0; i < _workIndexData.Length; i++)
+		{
+			_workIndexData[i] = 0;
+		}
+		for (int i = 0; i < _workPixels.Length; i++)
+		{
+			_workPixels[i].r = 0;
+			_workPixels[i].g = 0;
+			_workPixels[i].b = 0;
+			_workPixels[i].a = 0;
+		}
+	}
+
+	void pushUndo()
+	{
+		var indexData = new byte[_indexData.Length];
+		System.Array.Copy(_indexData, indexData, _indexData.Length);
+		_undoStack.Add(indexData);
 	}
 
 	void UpdateTexture(Texture2D tex, Color32[] pixels)
@@ -275,9 +283,10 @@ public class UnityPixelEditor : MonoBehaviour
         {
             if (GetPoint(out var point))
             {
+				pushUndo();
                 if (_tool == Tool.Pen)
                 {
-                    DrawDot(_indexData, _pixels, _paletteData, point.x, point.y, _paletteIndex);
+                    DrawDot(_indexData, _pixels, _paletteData, point.x, point.y, (byte)_paletteIndex);
                     UpdateTexture(_tex, _pixels);
                     _point = point;
                     _down = true;
@@ -290,7 +299,7 @@ public class UnityPixelEditor : MonoBehaviour
 				}
                 else if (_tool == Tool.Paint)
                 {
-                    Paint(_indexData, _pixels, _paletteData, point.x, point.y, _paletteIndex);
+                    Paint(_indexData, _pixels, _paletteData, point.x, point.y, (byte)_paletteIndex);
                     UpdateTexture(_tex, _pixels);
                 }
 				else if (_tool == Tool.FillRect)
@@ -309,21 +318,21 @@ public class UnityPixelEditor : MonoBehaviour
                 {
                     if (_tool == Tool.Pen)
                     {
-                        DrawLine(_indexData, _pixels, _paletteData, _point.x, _point.y, point.x, point.y, _paletteIndex);
+                        DrawLine(_indexData, _pixels, _paletteData, _point.x, _point.y, point.x, point.y, (byte)_paletteIndex);
                         //DrawDot(point.x, point.y, 1);
                         UpdateTexture(_tex, _pixels);
                     }
 					else if (_tool == Tool.Line)
 					{
 						ClearWork();
-						DrawLine(_workIndexData, _workPixels, _paletteData, _beginPoint.x, _beginPoint.y, point.x, point.y, _paletteIndex);
+						DrawLine(_workIndexData, _workPixels, _paletteData, _beginPoint.x, _beginPoint.y, point.x, point.y, (byte)_paletteIndex);
 						_point = point;
 						UpdateTexture(_workTex, _workPixels);
 					}
 					else if (_tool == Tool.FillRect)
 					{
 						ClearWork();
-						FillRect(_workIndexData, _workPixels, _paletteData, _beginPoint.x, _beginPoint.y, point.x, point.y, _paletteIndex);
+						FillRect(_workIndexData, _workPixels, _paletteData, _beginPoint.x, _beginPoint.y, point.x, point.y, (byte)_paletteIndex);
 						_point = point;
 						UpdateTexture(_workTex, _workPixels);
 					}
@@ -339,14 +348,14 @@ public class UnityPixelEditor : MonoBehaviour
 				{
 					ClearWork();
 					UpdateTexture(_workTex, _workPixels);
-					DrawLine(_indexData, _pixels, _paletteData, _beginPoint.x, _beginPoint.y, _point.x, _point.y, _paletteIndex);
+					DrawLine(_indexData, _pixels, _paletteData, _beginPoint.x, _beginPoint.y, _point.x, _point.y, (byte)_paletteIndex);
 					UpdateTexture(_tex, _pixels);
 				}
 				else if (_tool == Tool.FillRect)
 				{
 					ClearWork();
 					UpdateTexture(_workTex, _workPixels);
-					FillRect(_indexData, _pixels, _paletteData, _beginPoint.x, _beginPoint.y, _point.x, _point.y, _paletteIndex);
+					FillRect(_indexData, _pixels, _paletteData, _beginPoint.x, _beginPoint.y, _point.x, _point.y, (byte)_paletteIndex);
 					UpdateTexture(_tex, _pixels);
 				}
 			}
