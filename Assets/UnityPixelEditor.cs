@@ -30,7 +30,8 @@ public class UnityPixelEditor : MonoBehaviour
 	Vector2Int _beginPoint;
 
 	List<byte[]> _undoStack;
-	List<byte[]> _redoStack;
+	int _undoTop = 0;
+	Queue<byte[]> _redoStack;
 
 	public enum Tool
 	{
@@ -69,7 +70,7 @@ public class UnityPixelEditor : MonoBehaviour
 		_workPixels = new Color32[length];
 
 		_undoStack = new List<byte[]>();
-		_redoStack = new List<byte[]>();
+		_redoStack = new Queue<byte[]>();
 
 		if (_paletteData == null || _paletteData.Length == 0)
 		{
@@ -230,9 +231,36 @@ public class UnityPixelEditor : MonoBehaviour
 
 	void pushUndo()
 	{
-		var indexData = new byte[_indexData.Length];
+		const int UndoCapacity = 1024;
+		byte[] indexData = null;
+		if (_undoStack.Count >= UndoCapacity)
+		{
+			indexData = _undoStack[_undoTop % UndoCapacity];
+		}
+		else
+		{
+			indexData = new byte[_indexData.Length];
+			_undoStack.Add(indexData);
+		}
 		System.Array.Copy(_indexData, indexData, _indexData.Length);
-		_undoStack.Add(indexData);
+		_undoTop++;
+	}
+
+	byte[] popUndo()
+	{
+		if (_undoTop == 0)
+		{
+			return null;
+		}
+		const int UndoCapacity = 1024;
+		_undoTop--;
+		var indexData = _undoStack[_undoTop % UndoCapacity];
+		if (indexData == null)
+		{
+			return null;
+		}
+		_undoStack[_undoTop % UndoCapacity] = null;
+		return indexData;
 	}
 
 	void UpdateTexture(Texture2D tex, Color32[] pixels)
@@ -267,6 +295,21 @@ public class UnityPixelEditor : MonoBehaviour
 	public void SelectTool(int tool)
 	{
 		_tool = (Tool)tool;
+	}
+
+	public void Undo()
+	{
+		var indexData = popUndo();
+		if (indexData == null)
+		{
+			return;
+		}
+		System.Array.Copy(indexData, _indexData, _indexData.Length);
+		for (int i = 0; i < _indexData.Length; i++)
+		{
+			_pixels[i] = _paletteData[_indexData[i]];
+		}
+		UpdateTexture(_tex, _pixels);
 	}
 
     // Update is called once per frame
