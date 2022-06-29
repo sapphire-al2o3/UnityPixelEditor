@@ -100,6 +100,9 @@ public class UnityPixelEditor : MonoBehaviour
 	{
 		Destroy(_tex);
 		_tex = null;
+
+		Destroy(_workTex);
+		_workTex = null;
 	}
 
 	void DrawDot(byte[] indexData, Color32[] pixels, Color32[] paletteData, int x, int y, byte index)
@@ -272,7 +275,6 @@ public class UnityPixelEditor : MonoBehaviour
 	bool GetPoint(out Vector2Int result)
 	{
 		var pos = Input.mousePosition;
-		
 		var cam = _graphic.canvas.worldCamera;
 
 		RectTransformUtility.ScreenPointToLocalPointInRectangle(_graphic.rectTransform, pos, cam, out var point);
