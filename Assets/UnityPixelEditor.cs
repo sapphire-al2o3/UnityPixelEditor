@@ -243,7 +243,14 @@ public class UnityPixelEditor : MonoBehaviour
 		else
 		{
 			indexData = new byte[_indexData.Length];
-			_undoStack.Add(indexData);
+			if (_undoTop == _undoStack.Count)
+			{
+				_undoStack.Add(indexData);
+			}
+			else
+			{
+				_undoStack[_undoTop] = indexData;
+			}
 		}
 		System.Array.Copy(_indexData, indexData, _indexData.Length);
 		_undoTop++;
