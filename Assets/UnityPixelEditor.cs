@@ -31,7 +31,8 @@ public class UnityPixelEditor : MonoBehaviour
 
 	List<byte[]> _undoStack;
 	int _undoTop = 0;
-	Queue<byte[]> _redoStack;
+	List<byte[]> _redoStack;
+	int _redoTop = 0;
 
 	public enum Tool
 	{
@@ -70,7 +71,7 @@ public class UnityPixelEditor : MonoBehaviour
 		_workPixels = new Color32[length];
 
 		_undoStack = new List<byte[]>();
-		_redoStack = new Queue<byte[]>();
+		_redoStack = new List<byte[]>();
 
 		if (_paletteData == null || _paletteData.Length == 0)
 		{
@@ -232,7 +233,7 @@ public class UnityPixelEditor : MonoBehaviour
 		}
 	}
 
-	void pushUndo()
+	void PushUndo()
 	{
 		const int UndoCapacity = 1024;
 		byte[] indexData = null;
@@ -256,7 +257,7 @@ public class UnityPixelEditor : MonoBehaviour
 		_undoTop++;
 	}
 
-	byte[] popUndo()
+	byte[] PopUndo()
 	{
 		if (_undoTop == 0)
 		{
@@ -270,6 +271,15 @@ public class UnityPixelEditor : MonoBehaviour
 			return null;
 		}
 		_undoStack[_undoTop % UndoCapacity] = null;
+		return indexData;
+	}
+
+	void PushRedo()
+	{ }
+
+	byte[] PopRedo()
+	{
+		var indexData = _redoStack[0];
 		return indexData;
 	}
 
@@ -308,7 +318,7 @@ public class UnityPixelEditor : MonoBehaviour
 
 	public void Undo()
 	{
-		var indexData = popUndo();
+		var indexData = PopUndo();
 		if (indexData == null)
 		{
 			return;
@@ -321,7 +331,21 @@ public class UnityPixelEditor : MonoBehaviour
 		UpdateTexture(_tex, _pixels);
 	}
 
-    // Update is called once per frame
+	public void Redo()
+	{
+		var indexData = PopRedo();
+		if (indexData == null)
+		{
+			return;
+		}
+		for (int i = 0; i < _indexData.Length; i++)
+		{
+
+		}
+		UpdateTexture(_tex, _pixels);
+	}
+
+
     void Update()
     {
         if (Input.GetMouseButtonDown(1))
@@ -335,7 +359,7 @@ public class UnityPixelEditor : MonoBehaviour
         {
             if (GetPoint(out var point))
             {
-				pushUndo();
+				PushUndo();
                 if (_tool == Tool.Pen)
                 {
                     DrawDot(_indexData, _pixels, _paletteData, point.x, point.y, (byte)_paletteIndex);
