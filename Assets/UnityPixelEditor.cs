@@ -275,11 +275,44 @@ public class UnityPixelEditor : MonoBehaviour
 	}
 
 	void PushRedo()
-	{ }
+	{
+		Debug.Log($"Redo {_redoTop}:{_redoStack.Count}");
+		const int RedoCapacity = 1024;
+		byte[] indexData = null;
+		if (_redoStack.Count >= RedoCapacity)
+		{
+			indexData = _redoStack[_undoTop % RedoCapacity];
+		}
+		else
+		{
+			indexData = new byte[_indexData.Length];
+			if (_redoTop == _redoStack.Count)
+			{
+				_redoStack.Add(indexData);
+			}
+			else
+			{
+				_redoStack[_redoTop] = indexData;
+			}
+		}
+		System.Array.Copy(_indexData, indexData, _indexData.Length);
+		_redoTop++;
+	}
 
 	byte[] PopRedo()
 	{
-		var indexData = _redoStack[0];
+		if (_redoTop == 0)
+		{
+			return null;
+		}
+		const int UndoCapacity = 1024;
+		_redoTop--;
+		var indexData = _redoStack[_redoTop % UndoCapacity];
+		if (indexData == null)
+		{
+			return null;
+		}
+		_redoStack[_redoTop % UndoCapacity] = null;
 		return indexData;
 	}
 
@@ -323,6 +356,7 @@ public class UnityPixelEditor : MonoBehaviour
 		{
 			return;
 		}
+		PushRedo();
 		System.Array.Copy(indexData, _indexData, _indexData.Length);
 		for (int i = 0; i < _indexData.Length; i++)
 		{
@@ -338,9 +372,11 @@ public class UnityPixelEditor : MonoBehaviour
 		{
 			return;
 		}
+		PushUndo();
+		System.Array.Copy(indexData, _indexData, _indexData.Length);
 		for (int i = 0; i < _indexData.Length; i++)
 		{
-
+			_pixels[i] = _paletteData[_indexData[i]];
 		}
 		UpdateTexture(_tex, _pixels);
 	}
