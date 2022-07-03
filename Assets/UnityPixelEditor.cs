@@ -358,11 +358,7 @@ public class UnityPixelEditor : MonoBehaviour
 		}
 		PushRedo();
 		System.Array.Copy(indexData, _indexData, _indexData.Length);
-		for (int i = 0; i < _indexData.Length; i++)
-		{
-			_pixels[i] = _paletteData[_indexData[i]];
-		}
-		UpdateTexture(_tex, _pixels);
+		Refresh();
 	}
 
 	public void Redo()
@@ -374,6 +370,11 @@ public class UnityPixelEditor : MonoBehaviour
 		}
 		PushUndo();
 		System.Array.Copy(indexData, _indexData, _indexData.Length);
+		Refresh();
+	}
+
+	public void Refresh()
+	{
 		for (int i = 0; i < _indexData.Length; i++)
 		{
 			_pixels[i] = _paletteData[_indexData[i]];
