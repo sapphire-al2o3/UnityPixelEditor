@@ -19,5 +19,15 @@ public class PaletteUI : MonoBehaviour
 			images[i] = transform.GetChild(i).GetComponent<Image>();
 			images[i].color = palette[i];
 		}
-	}  
+	}
+
+	public void ChangePalette(int dir)
+	{
+		var palette = editor.GetPalette();
+	}
+
+	void CreatePalette()
+	{
+
+	}
 }
