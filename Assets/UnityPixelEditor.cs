@@ -276,7 +276,6 @@ public class UnityPixelEditor : MonoBehaviour
 
 	void PushRedo()
 	{
-		Debug.Log($"Redo {_redoTop}:{_redoStack.Count}");
 		const int RedoCapacity = 1024;
 		byte[] indexData = null;
 		if (_redoStack.Count >= RedoCapacity)
