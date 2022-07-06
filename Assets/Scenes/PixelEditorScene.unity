@@ -1725,6 +1725,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   editor: {fileID: 221616119}
+  colorSetList:
+  - backColor:
+      serializedVersion: 2
+      rgba: 4294967295
+    mainColor:
+      serializedVersion: 2
+      rgba: 4284703587
+    secondColor:
+      serializedVersion: 2
+      rgba: 4278190080
+  - backColor:
+      serializedVersion: 2
+      rgba: 4294967295
+    mainColor:
+      serializedVersion: 2
+      rgba: 4280498364
+    secondColor:
+      serializedVersion: 2
+      rgba: 4283273701
+  - backColor:
+      serializedVersion: 2
+      rgba: 4294967295
+    mainColor:
+      serializedVersion: 2
+      rgba: 4294938144
+    secondColor:
+      serializedVersion: 2
+      rgba: 4293217736
 --- !u!114 &1058138446
 MonoBehaviour:
   m_ObjectHideFlags: 0
