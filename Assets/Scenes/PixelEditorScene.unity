@@ -688,7 +688,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: -5685113325757506077, guid: 746a9b664a1c4f34f9a0e75c084efcea, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -701,9 +701,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 221616119}
-        m_TargetAssemblyTypeName: UnityPixelEditor, Assembly-CSharp
-        m_MethodName: SelectColor
+      - m_Target: {fileID: 1058138445}
+        m_TargetAssemblyTypeName: PaletteUI, Assembly-CSharp
+        m_MethodName: Select
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1725,6 +1725,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   editor: {fileID: 221616119}
+  normalSprite: {fileID: 385841605829469660, guid: 746a9b664a1c4f34f9a0e75c084efcea, type: 3}
+  selectedSprite: {fileID: -5685113325757506077, guid: 746a9b664a1c4f34f9a0e75c084efcea, type: 3}
   colorSetList:
   - backColor:
       serializedVersion: 2
@@ -1753,6 +1755,15 @@ MonoBehaviour:
     secondColor:
       serializedVersion: 2
       rgba: 4293217736
+  - backColor:
+      serializedVersion: 2
+      rgba: 4281640059
+    mainColor:
+      serializedVersion: 2
+      rgba: 4279656025
+    secondColor:
+      serializedVersion: 2
+      rgba: 4281012224
 --- !u!114 &1058138446
 MonoBehaviour:
   m_ObjectHideFlags: 0

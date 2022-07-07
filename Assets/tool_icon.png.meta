@@ -29,6 +29,9 @@ TextureImporter:
   - first:
       213: 2219021685600185918
     second: palette_icon__right
+  - first:
+      213: -5685113325757506077
+    second: tool_icon_9
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -146,7 +149,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
+        y: 48
         width: 16
         height: 16
       alignment: 0
@@ -167,7 +170,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 0
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -188,7 +191,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 16
+        y: 48
         width: 16
         height: 16
       alignment: 0
@@ -209,7 +212,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -230,7 +233,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 16
+        y: 48
         width: 16
         height: 16
       alignment: 0
@@ -251,7 +254,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 48
-        y: 16
+        y: 48
         width: 16
         height: 16
       alignment: 0
@@ -272,7 +275,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 0
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -293,7 +296,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 48
-        y: 0
+        y: 32
         width: 8
         height: 16
       alignment: 0
@@ -314,7 +317,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 56
-        y: 0
+        y: 32
         width: 8
         height: 16
       alignment: 0
@@ -326,6 +329,27 @@ TextureImporter:
       bones: []
       spriteID: e3e6617577c8bce10800000000000000
       internalID: 2219021685600185918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tool_icon_9
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 12
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ed526e1d8b6a11b0800000000000000
+      internalID: -5685113325757506077
       vertices: []
       indices: 
       edges: []
