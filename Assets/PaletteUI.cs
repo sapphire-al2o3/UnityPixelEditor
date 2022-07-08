@@ -60,7 +60,7 @@ public class PaletteUI : MonoBehaviour
 		}
 
 		images[index].sprite = selectedSprite;
-		images[index].rectTransform.sizeDelta = new Vector2(40, 40);
+		images[index].rectTransform.sizeDelta = new Vector2(32, 40);
 		editor.SelectColor(index);
 	}
 
