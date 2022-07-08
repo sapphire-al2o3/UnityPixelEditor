@@ -28,7 +28,7 @@ TextureImporter:
     second: palette_icon_left
   - first:
       213: 2219021685600185918
-    second: palette_icon__right
+    second: palette_icon_right
   - first:
       213: -5685113325757506077
     second: tool_icon_9
@@ -313,7 +313,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: palette_icon__right
+      name: palette_icon_right
       rect:
         serializedVersion: 2
         x: 56
