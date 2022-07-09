@@ -39,7 +39,8 @@ public class UnityPixelEditor : MonoBehaviour
 		Pen,
 		Line,
 		FillRect,
-		Paint
+		Paint,
+		FillEllipse
 	}
 
 	Tool _tool = Tool.Pen;
@@ -186,6 +187,173 @@ public class UnityPixelEditor : MonoBehaviour
 			{
 				indexData[y + j] = index;
 				pixels[y + j] = paletteData[index];
+			}
+		}
+	}
+
+	float Eps(float x0, float y0, float x1, float y1, float x, float y)
+	{
+		float dx = x1 = x0;
+		float dy = y1 - y0;
+		float dx2 = dx * dx;
+		float dy2 = dy * dy;
+		float ex = 2 * x - x0 - x1;
+		float ey = 2 * y - y0 - y1;
+		return dx2 * dy2 - dy * dy * ex * ex - dx * dx * ey * ey;
+
+	}
+
+	void FillEllipse(byte[] indexData, Color32[] pixels, Color32[] paletteData, int x0, int y0, int x1, int y1, byte index)
+	{
+		int left = Mathf.Min(x0, x1),
+			right = Mathf.Max(x0, x1),
+			top = Mathf.Min(y0, y1),
+			bottom = Mathf.Max(y0, y1);
+
+		x0 = left;
+		x1 = right;
+		y0 = top;
+		y1 = bottom;
+
+		int dx = x1 - x0;
+		int dy = y1 - y0;
+		int dx2 = dx * dx;
+		int dy2 = dy * dy;
+		int a = dx >> 1;
+		int b = dy >> 1;
+
+		int ix = (x0 + x1) / 2;
+		if (0 <= ix && ix < width)
+		{
+			for (int j = y0; j <= y1; j++)
+			{
+				if (0 <= j && j <height)
+				{
+					int k = j * width + ix;
+					indexData[k] = index;
+					pixels[k] = paletteData[index];
+				}
+			}
+		}
+
+		if ((dx & 1) == 1)
+		{
+			ix = (x0 + x1) / 2 + 1;
+			if (0 <= ix && ix < width)
+			{
+				for (int j = y0; j < y1; j++)
+				{
+					if (0 <= j && j < height)
+					{
+						int k = j * width + ix;
+						indexData[k] = index;
+						pixels[k] = paletteData[index];
+					}
+				}
+			}
+		}
+
+		int y = (y0 + y1) / 2;
+		int iy = (y0 + y1) / 2 * width;
+		if (0 <= iy && iy < width * height)
+		{
+			for (int j = x0; j <= x1; j++)
+			{
+				if (0 <= j && j < width)
+				{
+					int k = iy + j;
+					indexData[k] = index;
+					pixels[k] = paletteData[index];
+				}
+			}
+		}
+		if ((dy & 1) == 1)
+		{
+			iy = ((y0 + y1) / + 1) *width;
+			if(0 <= iy && iy < width * height)
+			{
+				for(int j = x0; j <= x1; j++)
+				{
+					if (0 <= j && j < width)
+					{
+						int k = iy + j;
+						indexData[k] = index;
+						pixels[k] = paletteData[index];
+					}
+				}
+			}
+		}
+
+		int a2 = a * a;
+		int b2 = b * b;
+		int f = b2 * (-2 * a + 1) + 2 * a2;
+		int cx = x0 + a;
+		int cy = y0 + b;
+		int n = (int)(a / Mathf.Sqrt((float)b2 / a2 + 1) - 0.5f);
+
+		y = y1;
+		int x = (x0 + x1) / 2;
+		for(int i = 0; i < n; i++)
+		{
+			float e0 = Eps(x0 + 0.5f, y0 + 0.5f, x1 + 0.5f, y1 + 0.5f, x - 1 + 0.5f, y + 0.5f);
+			float e1 = Eps(x0 + 0.5f, y0 + 0.5f, x1 + 0.5f, y1 + 0.5f, x - 1 + 0.5f, y - 1 + 0.5f);
+			if (Mathf.Abs(e0) < Mathf.Abs(e1))
+			{
+				x = x - 1;
+			}
+			else
+			{
+				x = x - 1;
+				y = y - 1;
+			}
+			for (int j = x; j <= x1 - x + x0; j++)
+			{
+				if (0 <= j && j < width)
+				{
+					int k = y * width + j;
+					indexData[k] = index;
+					pixels[k] = paletteData[index];
+					k = (y1 - y + y0) * width + j;
+					indexData[k] = index;
+					pixels[k] = paletteData[index];
+				}
+			}
+		}
+
+		if (y - 1 <= y)
+		{
+			return;
+		}
+
+		y = (y0 + y1) / 2;
+		x = x1;
+		n = (int)(b / Mathf.Sqrt((float)a2 / b2 + 1));
+		for (int i = 0; i < n; i++)
+		{
+			float e0 = Eps(x0 + 0.5f, y0 + 0.5f, x1 + 0.5f, y1 + 0.5f, x + 0.5f, y - 1 + 0.5f);
+			float e1 = Eps(x0 + 0.5f, y0 + 0.5f, x1 + 0.5f, y1 + 0.5f, x - 1 + 0.5f, y - 1 + 0.5f);
+
+			if(Mathf.Abs(e0) < Mathf.Abs(e1))
+			{
+				y = y - 1;
+			}
+			else
+			{
+				x = x - 1;
+				y = y - 1;
+			}
+
+			for(int j = x1 - x + x0; j <= x; j++)
+			{
+				if (0 <= j && j < width)
+				{
+					int k = y * width + j;
+					indexData[k] = index;
+					pixels[k] = paletteData[index];
+					k = (y1 - y + y0) * width + j;
+					indexData[k] = index;
+					pixels[k] = paletteData[index];
+				}
 			}
 		}
 	}
