@@ -37,9 +37,9 @@ public class UnityPixelEditor : MonoBehaviour
 	public enum Tool
 	{
 		Pen,
+		Paint,
 		Line,
 		FillRect,
-		Paint,
 		FillEllipse
 	}
 
@@ -564,25 +564,31 @@ public class UnityPixelEditor : MonoBehaviour
             if (GetPoint(out var point))
             {
 				PushUndo();
-                if (_tool == Tool.Pen)
-                {
-                    DrawDot(_indexData, _pixels, _paletteData, point.x, point.y, (byte)_paletteIndex);
-                    UpdateTexture(_tex, _pixels);
-                    _point = point;
-                    _down = true;
-                }
+				if (_tool == Tool.Pen)
+				{
+					DrawDot(_indexData, _pixels, _paletteData, point.x, point.y, (byte)_paletteIndex);
+					UpdateTexture(_tex, _pixels);
+					_point = point;
+					_down = true;
+				}
 				else if (_tool == Tool.Line)
 				{
 					_point = point;
 					_beginPoint = point;
 					_down = true;
 				}
-                else if (_tool == Tool.Paint)
-                {
-                    Paint(_indexData, _pixels, _paletteData, point.x, point.y, (byte)_paletteIndex);
-                    UpdateTexture(_tex, _pixels);
-                }
+				else if (_tool == Tool.Paint)
+				{
+					Paint(_indexData, _pixels, _paletteData, point.x, point.y, (byte)_paletteIndex);
+					UpdateTexture(_tex, _pixels);
+				}
 				else if (_tool == Tool.FillRect)
+				{
+					_point = point;
+					_beginPoint = point;
+					_down = true;
+				}
+				else if (_tool == Tool.FillEllipse)
 				{
 					_point = point;
 					_beginPoint = point;
@@ -616,7 +622,14 @@ public class UnityPixelEditor : MonoBehaviour
 						_point = point;
 						UpdateTexture(_workTex, _workPixels);
 					}
-                }
+					else if (_tool == Tool.FillEllipse)
+					{
+						ClearWork();
+						FillEllipse(_workIndexData, _workPixels, _paletteData, _beginPoint.x, _beginPoint.y, point.x, point.y, (byte)_paletteIndex);
+						_point = point;
+						UpdateTexture(_workTex, _workPixels);
+					}
+				}
                 _point = point;
             }
         }
@@ -636,6 +649,13 @@ public class UnityPixelEditor : MonoBehaviour
 					ClearWork();
 					UpdateTexture(_workTex, _workPixels);
 					FillRect(_indexData, _pixels, _paletteData, _beginPoint.x, _beginPoint.y, _point.x, _point.y, (byte)_paletteIndex);
+					UpdateTexture(_tex, _pixels);
+				}
+				else if (_tool == Tool.FillEllipse)
+				{
+					ClearWork();
+					UpdateTexture(_workTex, _workPixels);
+					FillEllipse(_indexData, _pixels, _paletteData, _beginPoint.x, _beginPoint.y, _point.x, _point.y, (byte)_paletteIndex);
 					UpdateTexture(_tex, _pixels);
 				}
 			}

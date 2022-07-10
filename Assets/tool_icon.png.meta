@@ -35,6 +35,9 @@ TextureImporter:
   - first:
       213: 2692033915477310917
     second: palette_icon_selected
+  - first:
+      213: -1038550458693718596
+    second: tool_icon_ellipse
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -366,7 +369,7 @@ TextureImporter:
         width: 16
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -374,6 +377,27 @@ TextureImporter:
       bones: []
       spriteID: 5cd345745960c5520800000000000000
       internalID: 2692033915477310917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tool_icon_ellipse
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbded3c3cd35691f0800000000000000
+      internalID: -1038550458693718596
       vertices: []
       indices: 
       edges: []

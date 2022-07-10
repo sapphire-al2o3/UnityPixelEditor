@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class ToolUI : MonoBehaviour
 {
-	//[SerializeField]
-	//UnityPixelEditor editor;
+	[SerializeField]
+	UnityPixelEditor editor;
 
 	[SerializeField]
 	Button[] toolButtons;
@@ -40,5 +40,7 @@ public class ToolUI : MonoBehaviour
 			colors.selectedColor = i == index ? selectedColor : normalColor;
 			toolButtons[i].colors = colors;
 		}
+
+		editor.SelectTool(index);
 	}
 }
