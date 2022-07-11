@@ -193,7 +193,7 @@ public class UnityPixelEditor : MonoBehaviour
 
 	float Eps(float x0, float y0, float x1, float y1, float x, float y)
 	{
-		float dx = x1 = x0;
+		float dx = x1 - x0;
 		float dy = y1 - y0;
 		float dx2 = dx * dx;
 		float dy2 = dy * dy;
@@ -222,17 +222,19 @@ public class UnityPixelEditor : MonoBehaviour
 		int a = dx >> 1;
 		int b = dy >> 1;
 
+		int x0c = x0 < 0 ? 0 : x0;
+		int x1c = x1 >= width ? width - 1 : x1;
+		int y0c = y0 < 0 ? 0 : y0;
+		int y1c = y1 >= height ? height - 1 : y1;
+
 		int ix = (x0 + x1) / 2;
 		if (0 <= ix && ix < width)
 		{
-			for (int j = y0; j <= y1; j++)
+			for (int j = y0c; j <= y1c; j++)
 			{
-				if (0 <= j && j <height)
-				{
-					int k = j * width + ix;
-					indexData[k] = index;
-					pixels[k] = paletteData[index];
-				}
+				int k = j * width + ix;
+				indexData[k] = index;
+				pixels[k] = paletteData[index];
 			}
 		}
 
@@ -241,7 +243,7 @@ public class UnityPixelEditor : MonoBehaviour
 			ix = (x0 + x1) / 2 + 1;
 			if (0 <= ix && ix < width)
 			{
-				for (int j = y0; j < y1; j++)
+				for (int j = y0; j <= y1; j++)
 				{
 					if (0 <= j && j < height)
 					{
@@ -257,29 +259,23 @@ public class UnityPixelEditor : MonoBehaviour
 		int iy = (y0 + y1) / 2 * width;
 		if (0 <= iy && iy < width * height)
 		{
-			for (int j = x0; j <= x1; j++)
+			for (int j = x0c; j <= x1c; j++)
 			{
-				if (0 <= j && j < width)
-				{
-					int k = iy + j;
-					indexData[k] = index;
-					pixels[k] = paletteData[index];
-				}
+				int k = iy + j;
+				indexData[k] = index;
+				pixels[k] = paletteData[index];
 			}
 		}
 		if ((dy & 1) == 1)
 		{
-			iy = ((y0 + y1) / + 1) *width;
+			iy = ((y0 + y1) / 2 + 1) * width;
 			if(0 <= iy && iy < width * height)
 			{
-				for(int j = x0; j <= x1; j++)
+				for(int j = x0c; j <= x1c; j++)
 				{
-					if (0 <= j && j < width)
-					{
-						int k = iy + j;
-						indexData[k] = index;
-						pixels[k] = paletteData[index];
-					}
+					int k = iy + j;
+					indexData[k] = index;
+					pixels[k] = paletteData[index];
 				}
 			}
 		}
@@ -289,23 +285,19 @@ public class UnityPixelEditor : MonoBehaviour
 		int f = b2 * (-2 * a + 1) + 2 * a2;
 		int cx = x0 + a;
 		int cy = y0 + b;
-		int n = (int)(a / Mathf.Sqrt((float)b2 / a2 + 1) - 0.5f);
+		float n = (a / Mathf.Sqrt((float)b2 / a2 + 1) - 0.5f);
 
 		y = y1;
 		int x = (x0 + x1) / 2;
 		for(int i = 0; i < n; i++)
 		{
-			float e0 = Eps(x0 + 0.5f, y0 + 0.5f, x1 + 0.5f, y1 + 0.5f, x - 1 + 0.5f, y + 0.5f);
-			float e1 = Eps(x0 + 0.5f, y0 + 0.5f, x1 + 0.5f, y1 + 0.5f, x - 1 + 0.5f, y - 1 + 0.5f);
-			if (Mathf.Abs(e0) < Mathf.Abs(e1))
+			float e0 = Eps(x0 + 0.5f, y0 + 0.5f, x1 + 0.5f, y1 + 0.5f, x - 0.5f, y + 0.5f);
+			float e1 = Eps(x0 + 0.5f, y0 + 0.5f, x1 + 0.5f, y1 + 0.5f, x - 0.5f, y - 0.5f);
+			if (Mathf.Abs(e0) >= Mathf.Abs(e1))
 			{
-				x = x - 1;
-			}
-			else
-			{
-				x = x - 1;
 				y = y - 1;
 			}
+			x--;
 			for (int j = x; j <= x1 - x + x0; j++)
 			{
 				if (0 <= j && j < width)
@@ -320,14 +312,14 @@ public class UnityPixelEditor : MonoBehaviour
 			}
 		}
 
-		if (y - 1 <= y)
+		if (y - 1 <= cy)
 		{
 			return;
 		}
 
 		y = (y0 + y1) / 2;
 		x = x1;
-		n = (int)(b / Mathf.Sqrt((float)a2 / b2 + 1));
+		n = (b / Mathf.Sqrt((float)a2 / b2 + 1));
 		for (int i = 0; i < n; i++)
 		{
 			float e0 = Eps(x0 + 0.5f, y0 + 0.5f, x1 + 0.5f, y1 + 0.5f, x + 0.5f, y - 1 + 0.5f);
@@ -343,7 +335,7 @@ public class UnityPixelEditor : MonoBehaviour
 				y = y - 1;
 			}
 
-			for(int j = x1 - x + x0; j <= x; j++)
+			for (int j = x1 - x + x0; j <= x; j++)
 			{
 				if (0 <= j && j < width)
 				{
