@@ -25,7 +25,7 @@ public class PaletteUI : MonoBehaviour
 	}
 
 	int index = 0;
-	List<Color32> colorSet = new List<Color32>();
+	List<Color32[]> paletteList = new List<Color32[]>();
 
 	[SerializeField]
 	ColorSet[] colorSetList;
@@ -46,9 +46,12 @@ public class PaletteUI : MonoBehaviour
 			});
 		}
 
-		colorSet.Add(new Color32(0, 0xFF, 0, 0xFF));
-		colorSet.Add(new Color32(0xFF, 0, 0xFF, 0xFF));
-		colorSet.Add(new Color32(0, 0, 0xFF, 0xFF));
+		foreach (var e in colorSetList)
+		{
+			var p = new Color32[8];
+			CreatePalette(e, p);
+			paletteList.Add(p);
+		}
 	}
 
 	public void Select(int index)
@@ -68,7 +71,12 @@ public class PaletteUI : MonoBehaviour
 	{
 		index = (index + dir + colorSetList.Length) % colorSetList.Length;
 		var palette = editor.GetPalette();
-		CreatePalette(colorSetList[index], palette);
+		var currentPalette = paletteList[index];
+
+		for (int i = 0; i < palette.Length; i++)
+		{
+			palette[i] = currentPalette[i];
+		}
 
 		for (int i = 0; i < images.Count; i++)
 		{
