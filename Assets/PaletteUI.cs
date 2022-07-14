@@ -52,6 +52,8 @@ public class PaletteUI : MonoBehaviour
 			CreatePalette(e, p);
 			paletteList.Add(p);
 		}
+
+		Select(1);
 	}
 
 	public void Select(int index)
