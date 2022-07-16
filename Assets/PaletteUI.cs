@@ -9,6 +9,9 @@ public class PaletteUI : MonoBehaviour
 	UnityPixelEditor editor;
 
 	[SerializeField]
+	ColorPickerUI picker;
+
+	[SerializeField]
 	Sprite normalSprite;
 
 	[SerializeField]
@@ -33,24 +36,26 @@ public class PaletteUI : MonoBehaviour
 	private void Start()
 	{
 		images = new List<Image>();
-		var palette = editor.GetPalette();
-		for (int i = 0; i < palette.Length && i < transform.childCount; i++)
-		{
-			var t = transform.GetChild(i);
-			images.Add(t.GetComponent<Image>());
-			images[i].color = palette[i];
-
-			int k = i;
-			t.GetComponent<Button>().onClick.AddListener(() => {
-				Select(k);
-			});
-		}
 
 		foreach (var e in colorSetList)
 		{
 			var p = new Color32[8];
 			CreatePalette(e, p);
 			paletteList.Add(p);
+		}
+
+		var palette = editor.GetPalette();
+		for (int i = 0; i < palette.Length && i < transform.childCount; i++)
+		{
+			var t = transform.GetChild(i);
+			images.Add(t.GetComponent<Image>());
+			images[i].color = palette[i];
+			paletteList[0][i] = palette[i];
+
+			int k = i;
+			t.GetComponent<Button>().onClick.AddListener(() => {
+				Select(k);
+			});
 		}
 
 		Select(1);
@@ -67,6 +72,8 @@ public class PaletteUI : MonoBehaviour
 		images[index].sprite = selectedSprite;
 		images[index].rectTransform.sizeDelta = new Vector2(32, 40);
 		editor.SelectColor(index);
+
+		picker.SetColor(paletteList[this.index][index]);
 	}
 
 	public void ChangePalette(int dir)

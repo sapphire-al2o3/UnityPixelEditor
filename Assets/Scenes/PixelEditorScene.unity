@@ -2640,9 +2640,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   editor: {fileID: 221616119}
+  picker: {fileID: 1544884322}
   normalSprite: {fileID: 385841605829469660, guid: 746a9b664a1c4f34f9a0e75c084efcea, type: 3}
   selectedSprite: {fileID: 2692033915477310917, guid: 746a9b664a1c4f34f9a0e75c084efcea, type: 3}
   colorSetList:
+  - backColor:
+      serializedVersion: 2
+      rgba: 4278190080
+    mainColor:
+      serializedVersion: 2
+      rgba: 4294967295
+    secondColor:
+      serializedVersion: 2
+      rgba: 4278194943
   - backColor:
       serializedVersion: 2
       rgba: 4294967295

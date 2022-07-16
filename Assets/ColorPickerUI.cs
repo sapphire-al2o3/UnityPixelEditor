@@ -143,8 +143,45 @@ public class ColorPickerUI : MonoBehaviour
 		_color = Color.HSVToRGB(_h, _s, _v);
 	}
 
-	public void ChangeHue(float value)
+	public void SetColor(Color32 color)
 	{
-		Debug.Log(value);
+		Color.RGBToHSV(color, out _h, out _s, out _v);
+		_color = color;
+
+		_hueSlider.SetValueWithoutNotify(_h * 32);
+		_sSlider.SetValueWithoutNotify(_s * 16);
+		_vSlider.SetValueWithoutNotify(_v * 16);
+
+		const int HQ = 32;
+
+		for (int i = 0; i < HQ; i++)
+		{
+			_buffer[i] = Color.HSVToRGB((float)i / HQ, 1f, 1f);
+		}
+
+		_hueTex.SetPixels32(0, 0, HQ, 1, _buffer);
+		_hueTex.Apply();
+
+		_hueImage.texture = _hueTex;
+
+		const int SQ = 16;
+
+		for (int i = 0; i < SQ; i++)
+		{
+			_buffer[i] = Color.HSVToRGB(_h, (float)i / SQ, _v);
+		}
+
+		_saturationTex.SetPixels32(0, 0, SQ, 1, _buffer);
+		_saturationTex.Apply();
+
+		const int VQ = 16;
+
+		for (int i = 0; i < VQ; i++)
+		{
+			_buffer[i] = Color.HSVToRGB(_h, _s, (float)i / VQ);
+		}
+
+		_valueTex.SetPixels32(0, 0, VQ, 1, _buffer);
+		_valueTex.Apply();
 	}
 }
