@@ -34,6 +34,8 @@ public class ColorPickerUI : MonoBehaviour
 
 	Color32[] _buffer;
 
+	public event System.Action<Color32> onChangeColor;
+
 	private void Awake()
 	{
 		_buffer = new Color32[32];
@@ -105,6 +107,7 @@ public class ColorPickerUI : MonoBehaviour
 			_valueTex.Apply();
 
 			_color = Color.HSVToRGB(_h, _s, _v);
+			onChangeColor?.Invoke(_color);
 		});
 
 		_sSlider.onValueChanged.AddListener(value =>
@@ -120,6 +123,7 @@ public class ColorPickerUI : MonoBehaviour
 			_valueTex.Apply();
 
 			_color = Color.HSVToRGB(_h, _s, _v);
+			onChangeColor?.Invoke(_color);
 		});
 
 		_vSlider.onValueChanged.AddListener(value =>
@@ -135,6 +139,7 @@ public class ColorPickerUI : MonoBehaviour
 			_saturationTex.Apply();
 
 			_color = Color.HSVToRGB(_h, _s, _v);
+			onChangeColor?.Invoke(_color);
 		});
 
 		_h = 0;

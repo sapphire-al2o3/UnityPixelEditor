@@ -28,6 +28,7 @@ public class PaletteUI : MonoBehaviour
 	}
 
 	int index = 0;
+	int colorIndex = 0;
 	List<Color32[]> paletteList = new List<Color32[]>();
 
 	[SerializeField]
@@ -59,6 +60,14 @@ public class PaletteUI : MonoBehaviour
 		}
 
 		Select(1);
+
+		picker.onChangeColor += (color) =>
+		{
+			editor.GetPalette()[colorIndex] = color;
+			images[colorIndex].color = color;
+			paletteList[this.index][colorIndex] = color;
+			editor.Refresh();
+		};
 	}
 
 	public void Select(int index)
@@ -72,6 +81,8 @@ public class PaletteUI : MonoBehaviour
 		images[index].sprite = selectedSprite;
 		images[index].rectTransform.sizeDelta = new Vector2(32, 40);
 		editor.SelectColor(index);
+
+		colorIndex = index;
 
 		picker.SetColor(paletteList[this.index][index]);
 	}
