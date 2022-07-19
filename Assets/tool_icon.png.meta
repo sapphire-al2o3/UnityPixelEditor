@@ -25,10 +25,10 @@ TextureImporter:
     second: palette_icon
   - first:
       213: -1214446822225386287
-    second: palette_icon_left
+    second: palette_left
   - first:
       213: 2219021685600185918
-    second: palette_icon_right
+    second: palette_right
   - first:
       213: -5685113325757506077
     second: tool_icon_9
@@ -46,7 +46,7 @@ TextureImporter:
     second: tool_icon_13
   - first:
       213: -4803122595254902042
-    second: tool_icon_14
+    second: colorpicker_cursor
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -307,7 +307,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: palette_icon_left
+      name: palette_left
       rect:
         serializedVersion: 2
         x: 48
@@ -328,7 +328,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: palette_icon_right
+      name: palette_right
       rect:
         serializedVersion: 2
         x: 56
@@ -352,13 +352,13 @@ TextureImporter:
       name: tool_icon_9
       rect:
         serializedVersion: 2
-        x: 32
-        y: 12
-        width: 20
-        height: 20
+        x: 48
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 4, y: 4, z: 4, w: 4}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -454,15 +454,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tool_icon_14
+      name: colorpicker_cursor
       rect:
         serializedVersion: 2
-        x: 58
-        y: 20
-        width: 6
-        height: 12
+        x: 56
+        y: 16
+        width: 8
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
