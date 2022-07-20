@@ -103,6 +103,8 @@ public class PaletteUI : MonoBehaviour
 			images[i].color = palette[i];
 		}
 		editor.Refresh();
+
+		picker.SetColor(paletteList[index][colorIndex]);
 	}
 
 	void CreatePalette(in ColorSet colorSet, Color32[] palette)
