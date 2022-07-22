@@ -120,4 +120,13 @@ public class PaletteUI : MonoBehaviour
 			palette[i + 5] = Color32.Lerp(colorSet.mainColor, colorSet.secondColor, (i + 1) / 3.0f);
 		}
 	}
+
+	public void OpenColorPicker()
+	{
+		picker.gameObject.SetActive(!picker.gameObject.activeSelf);
+		if (picker.gameObject.activeSelf)
+		{
+			picker.SetColor(paletteList[index][colorIndex]);
+		}
+	}
 }

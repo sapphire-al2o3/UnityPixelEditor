@@ -150,6 +150,11 @@ public class ColorPickerUI : MonoBehaviour
 
 	public void SetColor(Color32 color)
 	{
+		if (!gameObject.activeSelf)
+		{
+			return;
+		}
+
 		Color.RGBToHSV(color, out _h, out _s, out _v);
 		_color = color;
 
