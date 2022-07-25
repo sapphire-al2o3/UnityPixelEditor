@@ -40,7 +40,7 @@ TextureImporter:
     second: tool_icon_ellipse
   - first:
       213: -8216632432813535425
-    second: tool_icon_cursor
+    second: close
   - first:
       213: -5829524754068435968
     second: tool_icon_13
@@ -420,7 +420,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -428,6 +428,27 @@ TextureImporter:
       bones: []
       spriteID: 3ed526e1d8b6a11b0800000000000000
       internalID: -5685113325757506077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: close
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3f02300658a8fd80800000000000000
+      internalID: -8216632432813535425
       vertices: []
       indices: 
       edges: []
