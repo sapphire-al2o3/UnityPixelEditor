@@ -14,6 +14,7 @@ public class UnityPixelEditor : MonoBehaviour
 	[SerializeField]
 	Color32[] _paletteData = null;
 
+	public event System.Action<int> onSelectColor;
 
 	Texture2D _tex;
 	byte[] _indexData = null;
@@ -298,6 +299,7 @@ public class UnityPixelEditor : MonoBehaviour
 				y = y - 1;
 			}
 			x--;
+			Debug.Log($"{x} {y}");
 			for (int j = x; j <= x1 - x + x0; j++)
 			{
 				if (0 <= j && j < width)
@@ -549,7 +551,8 @@ public class UnityPixelEditor : MonoBehaviour
             if (GetPoint(out var point))
             {
                 _paletteIndex = _indexData[point.y * width + point.x];
-            }
+				onSelectColor?.Invoke(_paletteIndex);
+			}
         }
         else if (Input.GetMouseButtonDown(0))
         {

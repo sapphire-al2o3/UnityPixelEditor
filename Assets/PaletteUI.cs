@@ -61,6 +61,11 @@ public class PaletteUI : MonoBehaviour
 
 		Select(1);
 
+		editor.onSelectColor += (selectIndex) =>
+		{
+			Select(selectIndex);
+		};
+
 		picker.onChangeColor += (color) =>
 		{
 			editor.GetPalette()[colorIndex] = color;
