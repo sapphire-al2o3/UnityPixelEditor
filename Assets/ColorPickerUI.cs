@@ -5,193 +5,199 @@ using UnityEngine.UI;
 
 public class ColorPickerUI : MonoBehaviour
 {
-	Texture2D _hueTex;
-	Texture2D _saturationTex;
-	Texture2D _valueTex;
+    Texture2D _hueTex;
+    Texture2D _saturationTex;
+    Texture2D _valueTex;
 
-	[SerializeField]
-	RawImage _hueImage;
+    [SerializeField]
+    RawImage _hImage;
 
-	[SerializeField]
-	RawImage _saturationImage;
+    [SerializeField]
+    RawImage _sImage;
 
-	[SerializeField]
-	RawImage _valueImage;
+    [SerializeField]
+    RawImage _vImage;
 
-	[SerializeField]
-	Slider _hueSlider;
+    [SerializeField]
+    Slider _hSlider;
 
-	[SerializeField]
-	Slider _sSlider;
+    [SerializeField]
+    Slider _sSlider;
 
-	[SerializeField]
-	Slider _vSlider;
+    [SerializeField]
+    Slider _vSlider;
 
-	Color32 _color;
-	float _h;
-	float _s;
-	float _v;
+    Color32 _color;
+    float _h;
+    float _s;
+    float _v;
 
-	Color32[] _buffer;
+    Color32[] _buffer;
 
-	public event System.Action<Color32> onChangeColor;
+    public event System.Action<Color32> onChangeColor;
 
-	private void Awake()
-	{
-		_buffer = new Color32[32];
+    private void Awake()
+    {
+        _buffer = new Color32[32];
 
-		const int HQ = 32;
+        const int HQ = 32;
 
-		_hueTex = new Texture2D(HQ, 1);
-		_hueTex.filterMode = FilterMode.Point;
+        _hueTex = new Texture2D(HQ, 1);
+        _hueTex.filterMode = FilterMode.Point;
 
-		Color32[] hueData = new Color32[32];
-		for (int i = 0; i < hueData.Length; i++)
-		{
-			hueData[i] = Color.HSVToRGB(i / 32f, 1f, 1f);
-		}
+        for (int i = 0; i < HQ; i++)
+        {
+            _buffer[i] = Color.HSVToRGB((float)i / HQ, 1f, 1f);
+        }
 
-		_hueTex.SetPixels32(hueData);
-		_hueTex.Apply();
+        _hueTex.SetPixels32(0, 0, HQ, 1, _buffer);
+        _hueTex.Apply();
 
-		_hueImage.texture = _hueTex;
+        _hImage.texture = _hueTex;
 
-		const int SQ = 16;
+        const int SQ = 16;
 
-		_saturationTex = new Texture2D(SQ, 1);
-		_saturationTex.filterMode = FilterMode.Point;
+        _saturationTex = new Texture2D(SQ, 1);
+        _saturationTex.filterMode = FilterMode.Point;
 
-		for (int i = 0; i < SQ; i++)
-		{
-			_buffer[i] = Color.HSVToRGB(0, (float)i / SQ, 1f);
-		}
+        for (int i = 0; i < SQ; i++)
+        {
+            _buffer[i] = Color.HSVToRGB(0, (float)i / SQ, 1f);
+        }
 
-		_saturationTex.SetPixels32(0, 0, SQ, 1, _buffer);
-		_saturationTex.Apply();
+        _saturationTex.SetPixels32(0, 0, SQ, 1, _buffer);
+        _saturationTex.Apply();
 
-		_saturationImage.texture = _saturationTex;
+        _sImage.texture = _saturationTex;
 
-		const int VQ = 16;
+        const int VQ = 16;
 
-		_valueTex = new Texture2D(VQ, 1);
-		_valueTex.filterMode = FilterMode.Point;
+        _valueTex = new Texture2D(VQ, 1);
+        _valueTex.filterMode = FilterMode.Point;
 
-		for (int i = 0; i < VQ; i++)
-		{
-			_buffer[i] = Color.HSVToRGB(0, 0, (float)i / VQ);
-		}
+        for (int i = 0; i < VQ; i++)
+        {
+            _buffer[i] = Color.HSVToRGB(0, 0, (float)i / VQ);
+        }
 
-		_valueTex.SetPixels32(0, 0, VQ, 1, _buffer);
-		_valueTex.Apply();
+        _valueTex.SetPixels32(0, 0, VQ, 1, _buffer);
+        _valueTex.Apply();
 
-		_valueImage.texture = _valueTex;
+        _vImage.texture = _valueTex;
 
-		_hueSlider.onValueChanged.AddListener(value =>
-		{
-			_h = value / 32;
+        _hSlider.onValueChanged.AddListener(value =>
+        {
+            _h = value / 32;
 
-			for (int i = 0; i < SQ; i++)
-			{
-				_buffer[i] = Color.HSVToRGB(_h, (float)i / SQ, _v);
-			}
+            for (int i = 0; i < SQ; i++)
+            {
+                _buffer[i] = Color.HSVToRGB(_h, (float)i / SQ, _v);
+            }
 
-			_saturationTex.SetPixels32(0, 0, VQ, 1, _buffer);
-			_saturationTex.Apply();
+            _saturationTex.SetPixels32(0, 0, VQ, 1, _buffer);
+            _saturationTex.Apply();
 
-			for (int i = 0; i < VQ; i++)
-			{
-				_buffer[i] = Color.HSVToRGB(_h, _s, (float)i / VQ);
-			}
+            for (int i = 0; i < VQ; i++)
+            {
+                _buffer[i] = Color.HSVToRGB(_h, _s, (float)i / VQ);
+            }
 
-			_valueTex.SetPixels32(0, 0, VQ, 1, _buffer);
-			_valueTex.Apply();
+            _valueTex.SetPixels32(0, 0, VQ, 1, _buffer);
+            _valueTex.Apply();
 
-			_color = Color.HSVToRGB(_h, _s, _v);
-			onChangeColor?.Invoke(_color);
-		});
+            _color = Color.HSVToRGB(_h, _s, _v);
+            onChangeColor?.Invoke(_color);
+        });
 
-		_sSlider.onValueChanged.AddListener(value =>
-		{
-			_s = value / SQ;
+        _sSlider.onValueChanged.AddListener(value =>
+        {
+            _s = value / SQ;
 
-			for (int i = 0; i < SQ; i++)
-			{
-				_buffer[i] = Color.HSVToRGB(_h, _s, (float)i / VQ);
-			}
+            for (int i = 0; i < SQ; i++)
+            {
+                _buffer[i] = Color.HSVToRGB(_h, _s, (float)i / VQ);
+            }
 
-			_valueTex.SetPixels32(0, 0, VQ, 1, _buffer);
-			_valueTex.Apply();
+            _valueTex.SetPixels32(0, 0, VQ, 1, _buffer);
+            _valueTex.Apply();
 
-			_color = Color.HSVToRGB(_h, _s, _v);
-			onChangeColor?.Invoke(_color);
-		});
+            _color = Color.HSVToRGB(_h, _s, _v);
+            onChangeColor?.Invoke(_color);
+        });
 
-		_vSlider.onValueChanged.AddListener(value =>
-		{
-			_v = value / VQ;
+        _vSlider.onValueChanged.AddListener(value =>
+        {
+            _v = value / VQ;
 
-			for (int i = 0; i < SQ; i++)
-			{
-				_buffer[i] = Color.HSVToRGB(_h, (float)i / SQ, _v);
-			}
+            for (int i = 0; i < SQ; i++)
+            {
+                _buffer[i] = Color.HSVToRGB(_h, (float)i / SQ, _v);
+            }
 
-			_saturationTex.SetPixels32(0, 0, VQ, 1, _buffer);
-			_saturationTex.Apply();
+            _saturationTex.SetPixels32(0, 0, VQ, 1, _buffer);
+            _saturationTex.Apply();
 
-			_color = Color.HSVToRGB(_h, _s, _v);
-			onChangeColor?.Invoke(_color);
-		});
+            _color = Color.HSVToRGB(_h, _s, _v);
+            onChangeColor?.Invoke(_color);
+        });
 
-		_h = 0;
-		_s = 1f;
-		_v = 1f;
-		_color = Color.HSVToRGB(_h, _s, _v);
-	}
+        _h = 0;
+        _s = 1f;
+        _v = 1f;
+        _color = Color.HSVToRGB(_h, _s, _v);
+    }
 
-	public void SetColor(Color32 color)
-	{
-		if (!gameObject.activeSelf)
-		{
-			return;
-		}
+    private void OnDestroy()
+    {
+        Destroy(_hueTex);
+        Destroy(_saturationTex);
+        Destroy(_valueTex);
+    }
 
-		Color.RGBToHSV(color, out _h, out _s, out _v);
-		_color = color;
+    public void SetColor(Color32 color)
+    {
+        if (!gameObject.activeSelf)
+        {
+            return;
+        }
 
-		_hueSlider.SetValueWithoutNotify(_h * 32);
-		_sSlider.SetValueWithoutNotify(_s * 16);
-		_vSlider.SetValueWithoutNotify(_v * 16);
+        Color.RGBToHSV(color, out _h, out _s, out _v);
+        _color = color;
 
-		const int HQ = 32;
+        _hSlider.SetValueWithoutNotify(_h * 32);
+        _sSlider.SetValueWithoutNotify(_s * 16);
+        _vSlider.SetValueWithoutNotify(_v * 16);
 
-		for (int i = 0; i < HQ; i++)
-		{
-			_buffer[i] = Color.HSVToRGB((float)i / HQ, 1f, 1f);
-		}
+        const int HQ = 32;
 
-		_hueTex.SetPixels32(0, 0, HQ, 1, _buffer);
-		_hueTex.Apply();
+        for (int i = 0; i < HQ; i++)
+        {
+            _buffer[i] = Color.HSVToRGB((float)i / HQ, 1f, 1f);
+        }
 
-		_hueImage.texture = _hueTex;
+        _hueTex.SetPixels32(0, 0, HQ, 1, _buffer);
+        _hueTex.Apply();
 
-		const int SQ = 16;
+        _hImage.texture = _hueTex;
 
-		for (int i = 0; i < SQ; i++)
-		{
-			_buffer[i] = Color.HSVToRGB(_h, (float)i / SQ, _v);
-		}
+        const int SQ = 16;
 
-		_saturationTex.SetPixels32(0, 0, SQ, 1, _buffer);
-		_saturationTex.Apply();
+        for (int i = 0; i < SQ; i++)
+        {
+            _buffer[i] = Color.HSVToRGB(_h, (float)i / SQ, _v);
+        }
 
-		const int VQ = 16;
+        _saturationTex.SetPixels32(0, 0, SQ, 1, _buffer);
+        _saturationTex.Apply();
 
-		for (int i = 0; i < VQ; i++)
-		{
-			_buffer[i] = Color.HSVToRGB(_h, _s, (float)i / VQ);
-		}
+        const int VQ = 16;
 
-		_valueTex.SetPixels32(0, 0, VQ, 1, _buffer);
-		_valueTex.Apply();
-	}
+        for (int i = 0; i < VQ; i++)
+        {
+            _buffer[i] = Color.HSVToRGB(_h, _s, (float)i / VQ);
+        }
+
+        _valueTex.SetPixels32(0, 0, VQ, 1, _buffer);
+        _valueTex.Apply();
+    }
 }
