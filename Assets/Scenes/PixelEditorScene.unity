@@ -4133,10 +4133,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e6d08ad0ff13d247891955e8e1da17a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hueImage: {fileID: 147838980}
-  _saturationImage: {fileID: 1601401896}
-  _valueImage: {fileID: 809112764}
-  _hueSlider: {fileID: 1884426609}
+  _hImage: {fileID: 147838980}
+  _sImage: {fileID: 1601401896}
+  _vImage: {fileID: 809112764}
+  _hSlider: {fileID: 1884426609}
   _sSlider: {fileID: 424953118}
   _vSlider: {fileID: 88002358}
 --- !u!1 &1597178657
