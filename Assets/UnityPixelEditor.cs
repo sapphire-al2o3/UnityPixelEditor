@@ -46,6 +46,24 @@ public class UnityPixelEditor : MonoBehaviour
 
     Tool _tool = Tool.Pen;
 
+    public static Texture2D CreateTexture(int width, int height, byte[] indexData, Color32[] paletteData)
+    {
+        var tex = new Texture2D(width, height);
+        tex.wrapMode = TextureWrapMode.Clamp;
+        tex.filterMode = FilterMode.Point;
+
+        var pixels = new Color32[width * height];
+        for (int i = 0; i < indexData.Length; i++)
+        {
+            pixels[i] = paletteData[indexData[i]];
+        }
+
+        tex.SetPixels32(pixels);
+        tex.Apply();
+
+        return tex;
+    }
+
     public Texture2D GetTexture()
     {
         return _tex;
@@ -54,6 +72,17 @@ public class UnityPixelEditor : MonoBehaviour
     public Color32[] GetPalette()
     {
         return _paletteData;
+    }
+
+    public void SetImage(byte[] indexData, Color32[] paletteData)
+    {
+        if (indexData == null || paletteData == null)
+        {
+            throw new System.ArgumentNullException();
+        }
+        System.Array.Copy(indexData, _indexData, indexData.Length);
+        System.Array.Copy(paletteData, _paletteData, paletteData.Length);
+        Refresh();
     }
 
     private void Awake()
