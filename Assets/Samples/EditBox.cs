@@ -5,6 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class EditBox : MonoBehaviour
 {
+    public static int selectedBox = -1;
+
+    [SerializeField]
+    GameObject[] boxs;
+
+    void Awake()
+    {
+        if (selectedBox >= 0)
+        {
+            boxs[selectedBox].GetComponent<PixelImageSetter>();
+        }
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -13,6 +26,15 @@ public class EditBox : MonoBehaviour
             if (Physics.Raycast(ray, out var hitInfo))
             {
                 var go = hitInfo.collider.gameObject;
+
+                for (int i = 0; i < boxs.Length; i++)
+                {
+                    if (boxs[i] == go)
+                    {
+                        selectedBox = i;
+                        break;
+                    }
+                }
 
                 SceneManager.LoadScene("PixelEditorScene");
             }
