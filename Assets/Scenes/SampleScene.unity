@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d0dd501adaade44197ead00857504d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tempImage: {fileID: 11400000, guid: 7990f0b5a001efd44830207c786aa5ab, type: 2}
   boxs: []
 --- !u!4 &192721558
 Transform:

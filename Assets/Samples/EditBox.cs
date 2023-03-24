@@ -8,6 +8,9 @@ public class EditBox : MonoBehaviour
     public static int selectedBox = -1;
 
     [SerializeField]
+    PixelImageData tempImage;
+
+    [SerializeField]
     GameObject[] boxs;
 
     void Awake()

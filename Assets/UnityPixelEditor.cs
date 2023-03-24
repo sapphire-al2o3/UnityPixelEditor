@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class UnityPixelEditor : MonoBehaviour
 {
     [SerializeField]
+    PixelImageData defaultImage;
+
+    [SerializeField]
     int width = 16;
 
     [SerializeField]
