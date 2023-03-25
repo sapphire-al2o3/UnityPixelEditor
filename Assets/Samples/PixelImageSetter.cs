@@ -22,9 +22,17 @@ public class PixelImageSetter : MonoBehaviour
             {
                 Destroy(_tex);
             }
-            _tex = UnityPixelEditor.CreateTexture(32, 32, indexData, paletteData);
+            _tex = UnityPixelEditor.CreateTexture(16, 16, indexData, paletteData);
 
             GetComponent<Renderer>().material.mainTexture = _tex;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (_tex != null)
+        {
+            Destroy(_tex);
         }
     }
 }
