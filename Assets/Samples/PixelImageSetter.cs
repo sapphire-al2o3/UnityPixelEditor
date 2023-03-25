@@ -8,6 +8,12 @@ public class PixelImageSetter : MonoBehaviour
     Color32[] paletteData;
     Texture2D _tex;
 
+    public void Setup(byte[] i, Color32[] p)
+    {
+        indexData = i;
+        paletteData = p;
+    }
+
     void Start()
     {
         if (indexData != null)

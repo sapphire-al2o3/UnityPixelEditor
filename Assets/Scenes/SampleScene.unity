@@ -246,7 +246,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tempImage: {fileID: 11400000, guid: 7990f0b5a001efd44830207c786aa5ab, type: 2}
-  boxs: []
+  boxs:
+  - {fileID: 488175460}
+  - {fileID: 2050624516}
+  - {fileID: 1525020993}
 --- !u!4 &192721558
 Transform:
   m_ObjectHideFlags: 0

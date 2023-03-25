@@ -17,7 +17,7 @@ public class EditBox : MonoBehaviour
     {
         if (selectedBox >= 0)
         {
-            boxs[selectedBox].GetComponent<PixelImageSetter>();
+            boxs[selectedBox].GetComponent<PixelImageSetter>().Setup(tempImage.indexData, tempImage.paletteData);
         }
     }
 
