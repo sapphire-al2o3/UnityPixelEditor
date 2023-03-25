@@ -43,7 +43,7 @@ TextureImporter:
     second: close
   - first:
       213: -5829524754068435968
-    second: tool_icon_13
+    second: exit
   - first:
       213: -4803122595254902042
     second: colorpicker_cursor
@@ -441,7 +441,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -449,6 +449,27 @@ TextureImporter:
       bones: []
       spriteID: f3f02300658a8fd80800000000000000
       internalID: -8216632432813535425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exit
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00c87605f1e591fa0800000000000000
+      internalID: -5829524754068435968
       vertices: []
       indices: 
       edges: []
