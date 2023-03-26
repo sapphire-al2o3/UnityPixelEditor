@@ -77,6 +77,11 @@ public class UnityPixelEditor : MonoBehaviour
         return _paletteData;
     }
 
+    public byte[] GetIndex()
+    {
+        return _indexData;
+    }
+
     public void SetImage(byte[] indexData, Color32[] paletteData)
     {
         if (indexData == null || paletteData == null)
