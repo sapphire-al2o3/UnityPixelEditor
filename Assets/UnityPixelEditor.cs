@@ -67,6 +67,18 @@ public class UnityPixelEditor : MonoBehaviour
         return tex;
     }
 
+    public static void UpdateTexture(int width, int height, byte[] indexData, Color32[] paletteData, Texture2D tex)
+    {
+        var pixels = new Color32[width * height];
+        for (int i = 0; i < indexData.Length; i++)
+        {
+            pixels[i] = paletteData[indexData[i]];
+        }
+
+        tex.SetPixels32(pixels);
+        tex.Apply();
+    }
+
     public Texture2D GetTexture()
     {
         return _tex;
