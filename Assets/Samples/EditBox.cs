@@ -26,15 +26,15 @@ public class EditBox : MonoBehaviour
         if (cacheImages == null)
         {
             cacheImages = new PixelImageData[boxs.Length];
-            for (int i = 0; i < cacheImages.Length; i++)
-            {
-                cacheImages[i] = ScriptableObject.CreateInstance<PixelImageData>();
-            }
         }
 
         if (selectedBox >= 0)
         {
-            cacheImages[selectedBox] = tempImage;
+            if (cacheImages[selectedBox] == null)
+            {
+                cacheImages[selectedBox] = ScriptableObject.CreateInstance<PixelImageData>();
+            }
+            cacheImages[selectedBox].Copy(tempImage);
             if (cacheTextures[selectedBox] == null)
             {
                 cacheTextures[selectedBox] = UnityPixelEditor.CreateTexture(tempImage.width, tempImage.height, tempImage.indexData, tempImage.paletteData);
@@ -72,8 +72,11 @@ public class EditBox : MonoBehaviour
                     }
                 }
 
-                var image = cacheImages[selectedBox];
-                //System.Array.Copy(image.indexData, tempImage.indexData, image.indexData.Length);
+                if (cacheImages[selectedBox] != null)
+                {
+                    var image = cacheImages[selectedBox];
+                    tempImage.Copy(image);
+                }
                 SceneManager.LoadScene("PixelEditorScene");
             }
         }
