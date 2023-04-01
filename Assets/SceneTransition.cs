@@ -14,6 +14,10 @@ public class SceneTransition : MonoBehaviour
     [SerializeField]
     UnityPixelEditor editor;
 
+    void Awake()
+    {
+        editor.SetImage(image.indexData, image.paletteData);
+    }
     public void Run()
     {
         image.width = 16;
