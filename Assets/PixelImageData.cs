@@ -11,6 +11,14 @@ public class PixelImageData : ScriptableObject
     public byte[] indexData;
     public Color32[] paletteData;
 
+    public void Create(int w, int h, int paletteSize)
+    {
+        width = w;
+        height = h;
+        indexData = new byte[w * h];
+        paletteData = new Color32[paletteSize];
+    }
+
     public void Copy(PixelImageData src)
     {
         width = src.width;

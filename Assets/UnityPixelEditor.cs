@@ -101,7 +101,7 @@ public class UnityPixelEditor : MonoBehaviour
             throw new System.ArgumentNullException();
         }
         System.Array.Copy(indexData, _indexData, indexData.Length);
-        System.Array.Copy(paletteData, _paletteData, paletteData.Length);
+        //System.Array.Copy(paletteData, _paletteData, paletteData.Length);
         Refresh();
     }
 

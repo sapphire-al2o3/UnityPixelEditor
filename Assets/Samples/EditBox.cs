@@ -30,10 +30,6 @@ public class EditBox : MonoBehaviour
 
         if (selectedBox >= 0)
         {
-            if (cacheImages[selectedBox] == null)
-            {
-                cacheImages[selectedBox] = ScriptableObject.CreateInstance<PixelImageData>();
-            }
             cacheImages[selectedBox].Copy(tempImage);
             if (cacheTextures[selectedBox] == null)
             {
@@ -70,6 +66,12 @@ public class EditBox : MonoBehaviour
                         selectedBox = i;
                         break;
                     }
+                }
+
+                if (cacheImages[selectedBox] == null)
+                {
+                    cacheImages[selectedBox] = ScriptableObject.CreateInstance<PixelImageData>();
+                    cacheImages[selectedBox].Create(16, 16, 8);
                 }
 
                 if (cacheImages[selectedBox] != null)
