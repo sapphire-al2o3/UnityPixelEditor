@@ -68,17 +68,16 @@ public class EditBox : MonoBehaviour
                     }
                 }
 
-                if (cacheImages[selectedBox] == null)
+                var image = cacheImages[selectedBox];
+
+                if (image == null)
                 {
-                    cacheImages[selectedBox] = ScriptableObject.CreateInstance<PixelImageData>();
-                    cacheImages[selectedBox].Create(16, 16, 8);
+                    image = ScriptableObject.CreateInstance<PixelImageData>();
+                    image.Create(16, 16, 8);
                 }
 
-                if (cacheImages[selectedBox] != null)
-                {
-                    var image = cacheImages[selectedBox];
-                    tempImage.Copy(image);
-                }
+                tempImage.Copy(image);
+                
                 SceneManager.LoadScene("PixelEditorScene");
             }
         }
