@@ -16,7 +16,10 @@ public class SceneTransition : MonoBehaviour
 
     void Awake()
     {
-        editor.SetImage(image.indexData, image.paletteData);
+        if (image.width == 16 && image.height == 16)
+        {
+            editor.SetImage(image.indexData, image.paletteData);
+        }
     }
     public void Run()
     {

@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class EditBox : MonoBehaviour
 {
     public static int selectedBox = -1;
+    public static bool selectedEmpty = false;
 
     [SerializeField]
     PixelImageData tempImage;
@@ -30,6 +31,11 @@ public class EditBox : MonoBehaviour
 
         if (selectedBox >= 0)
         {
+            if (cacheImages[selectedBox] == null)
+            {
+                cacheImages[selectedBox] = ScriptableObject.CreateInstance<PixelImageData>();
+                cacheImages[selectedBox].Create(tempImage.width, tempImage.height, 16);
+            }
             cacheImages[selectedBox].Copy(tempImage);
             if (cacheTextures[selectedBox] == null)
             {
@@ -70,14 +76,16 @@ public class EditBox : MonoBehaviour
 
                 var image = cacheImages[selectedBox];
 
-                if (image == null)
+                if (image != null)
                 {
-                    image = ScriptableObject.CreateInstance<PixelImageData>();
-                    image.Create(16, 16, 8);
+                    tempImage.Copy(image);
+                }
+                else
+                {
+                    tempImage.width = 0;
+                    tempImage.height = 0;
                 }
 
-                tempImage.Copy(image);
-                
                 SceneManager.LoadScene("PixelEditorScene");
             }
         }
