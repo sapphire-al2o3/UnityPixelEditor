@@ -55,14 +55,7 @@ public class UnityPixelEditor : MonoBehaviour
         tex.wrapMode = TextureWrapMode.Clamp;
         tex.filterMode = FilterMode.Point;
 
-        var pixels = new Color32[width * height];
-        for (int i = 0; i < indexData.Length; i++)
-        {
-            pixels[i] = paletteData[indexData[i]];
-        }
-
-        tex.SetPixels32(pixels);
-        tex.Apply();
+        UpdateTexture(width, height, indexData, paletteData, tex);
 
         return tex;
     }
